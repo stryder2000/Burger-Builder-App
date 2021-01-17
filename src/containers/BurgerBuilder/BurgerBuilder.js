@@ -4,6 +4,9 @@ import Burger from '../../components/Burger/Burger';
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
+import axios from '../../axios-orders';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 const INGREDIENTS_PRICE = {
     salad: 0.4,
@@ -14,16 +17,21 @@ const INGREDIENTS_PRICE = {
 
 class BurgerBuilder extends Component {
     state = {
-        ingredients: {
-            salad : 0,
-            cheese : 0,
-            bacon : 0,
-            meat : 0
-        },
+        ingredients: null,
         TotalPrice: 4,
         purchasable: false,
-        purchasing: false
+        purchasing: false,
+        loading: false,
+        error: false
     };
+    
+    componentDidMount = () => {
+        axios.get('https://react-burger-builder-3d148-default-rtdb.firebaseio.com/ingredients.json')
+        .then(response => {
+            this.setState({ingredients: response.data});
+        })
+        .catch(error => this.setState({error: true}));
+    }
 
     updatePurchaseState = (ingredients) => {
         const sum = Object.keys(ingredients)
@@ -72,7 +80,25 @@ class BurgerBuilder extends Component {
     }
 
     continuePurchaseHandler = () => {
-        alert('You Continue!');
+        this.setState({loading: true});
+        const order = {
+            ingredients: this.state.ingredients,
+            price: this.state.TotalPrice,
+            customer: {
+                name: 'Siddharth',
+                address: {
+                    Street: 'Teststreet 1',
+                    zipCode: '345312',
+                    country: 'India' 
+                },
+                email: 'test@gmail.com'
+            },
+            deliveryMethod: 'fastest'
+        };
+
+        axios.post('/orders.json', order)
+        .then((response) => {this.setState({loading: false, purchasing: false})})
+        .catch((error) => {this.setState({loading: false, purchasing: false})});
     }
 
     cancelPurchaseHandler = () => {
@@ -87,27 +113,44 @@ class BurgerBuilder extends Component {
             disabledInfo[key] = disabledInfo[key] <= 0;
         }
 
+        let burger = (this.state.error) ? <h3><center>Ingredients Can't be loaded!</center></h3> : <Spinner />;
+        let orderSummary =  null;
+
+        if(this.state.ingredients){
+            orderSummary = <OrderSummary 
+            ingredients={this.state.ingredients}
+            price={this.state.TotalPrice}
+            purchaseCanceled={this.cancelPurchaseHandler}
+            purchaseContinued={this.continuePurchaseHandler} />;
+
+            if(this.state.loading){
+                orderSummary = <Spinner />
+            }
+
+            burger = (
+                <Auxilliary>
+                    <Burger ingredients={this.state.ingredients} />
+                    <BuildControls 
+                    ingredientAdded = {this.addIngredientHandler} 
+                    ingredientRemoved = {this.removeIngredientHandler}
+                    disabled = {disabledInfo}
+                    price = {this.state.TotalPrice}
+                    purchasable = {this.state.purchasable}
+                    ordered = {this.purchaseHandler}
+                    />
+                </Auxilliary>
+            );
+        }
+
         return(
             <Auxilliary>
                 <Modal show={this.state.purchasing} modalClosed={this.cancelPurchaseHandler}>
-                    <OrderSummary 
-                        ingredients={this.state.ingredients}
-                        price={this.state.TotalPrice}
-                        purchaseCanceled={this.cancelPurchaseHandler}
-                        purchaseContinued={this.continuePurchaseHandler} />
+                    {orderSummary}
                 </Modal>
-                <Burger ingredients={this.state.ingredients} />
-                <BuildControls 
-                ingredientAdded = {this.addIngredientHandler} 
-                ingredientRemoved = {this.removeIngredientHandler}
-                disabled = {disabledInfo}
-                price = {this.state.TotalPrice}
-                purchasable = {this.state.purchasable}
-                ordered = {this.purchaseHandler}
-                />
+                {burger}
             </Auxilliary>
         )
     }
 }
 
-export default BurgerBuilder;
+export default withErrorHandler(BurgerBuilder,axios);
