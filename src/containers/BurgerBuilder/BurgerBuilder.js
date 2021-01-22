@@ -33,6 +33,8 @@ class BurgerBuilder extends Component {
         .catch(error => this.setState({error: true}));
     }
 
+
+    // To make sure that we have added some ingredient to burger before pressing Order Now button
     updatePurchaseState = (ingredients) => {
         const sum = Object.keys(ingredients)
         .map((el) => {
@@ -44,6 +46,7 @@ class BurgerBuilder extends Component {
         this.setState({purchasable: sum>0});
     }
 
+    //To add an ingredient to the burger while making it.
     addIngredientHandler = (type) => {
         const oldCount = this.state.ingredients[type];
         const newCount = oldCount + 1;
@@ -58,6 +61,7 @@ class BurgerBuilder extends Component {
         this.updatePurchaseState(updatedIngredients);
     }
 
+    //To remove an ingredient from the burger while making it.
     removeIngredientHandler = (type) => {
         const oldCount = this.state.ingredients[type];
         if(oldCount <=0){
@@ -75,57 +79,55 @@ class BurgerBuilder extends Component {
         this.updatePurchaseState(updatedIngredients);
     }
 
+    //To execute when we press the 'Order Now' button
     purchaseHandler = () => {
         this.setState({purchasing: true});
     }
-
+    
+    // To execute when we press the 'continue' button on the Order Summary modal. 
     continuePurchaseHandler = () => {
-        this.setState({loading: true});
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.TotalPrice,
-            customer: {
-                name: 'Siddharth',
-                address: {
-                    Street: 'Teststreet 1',
-                    zipCode: '345312',
-                    country: 'India' 
-                },
-                email: 'test@gmail.com'
-            },
-            deliveryMethod: 'fastest'
-        };
-
-        axios.post('/orders.json', order)
-        .then((response) => {this.setState({loading: false, purchasing: false})})
-        .catch((error) => {this.setState({loading: false, purchasing: false})});
+        const queryParams = [];
+        for(let i in this.state.ingredients){
+            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
+        }
+        queryParams.push('price=' + this.state.TotalPrice.toFixed(2));
+        const queryString = queryParams.join('&');
+        this.props.history.push({
+            pathname: './checkout',
+            search: '?' + queryString
+        });
     }
 
+    // To execute when we press the 'cancel' button on the Order Summary modal. 
     cancelPurchaseHandler = () => {
-        this.setState({purchasing: false});
+        this.props.history.goBack();
     }
 
     render(){
+        //Used to disable the 'Less' button when the ingredient count is 0.
         let disabledInfo = {
             ...this.state.ingredients
         };
         for(let key in disabledInfo){
             disabledInfo[key] = disabledInfo[key] <= 0;
         }
-
+        
+        //this.state.error is true when the axios cannot fetch the burger ingredients from firebase
         let burger = (this.state.error) ? <h3><center>Ingredients Can't be loaded!</center></h3> : <Spinner />;
+
         let orderSummary =  null;
 
+        if(this.state.loading){
+            orderSummary = <Spinner />
+        }
+
+        //Set ingredients and Burger if the ingredients have been fetched.
         if(this.state.ingredients){
             orderSummary = <OrderSummary 
             ingredients={this.state.ingredients}
             price={this.state.TotalPrice}
             purchaseCanceled={this.cancelPurchaseHandler}
             purchaseContinued={this.continuePurchaseHandler} />;
-
-            if(this.state.loading){
-                orderSummary = <Spinner />
-            }
 
             burger = (
                 <Auxilliary>
