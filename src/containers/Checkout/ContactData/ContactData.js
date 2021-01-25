@@ -3,6 +3,7 @@ import Button from './../../../components/UI/Button/Button';
 import classes from './ContactData.css';
 import axios from './../../../axios-orders';
 import Input from '../../../components/UI/Input/Input';
+import { connect } from 'react-redux';
 
 class ContactData extends Component {
     state = {
@@ -100,7 +101,7 @@ class ContactData extends Component {
         }
         const order = {
             ingredients: this.props.ingredients,
-            price: this.props.TotalPrice,
+            price: this.props.TotalPrice.toFixed(2),
             formData
         };
 
@@ -183,4 +184,11 @@ class ContactData extends Component {
     }
 }
 
-export default ContactData;
+const MapStateToProps = state => {
+    return {
+        ingredients: state.ingredients,
+        TotalPrice: state.TotalPrice
+    }
+}
+
+export default connect(MapStateToProps)(ContactData);
