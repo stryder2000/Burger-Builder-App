@@ -15,7 +15,7 @@ const checkoutSummary = (props) => {
                         alignItems: 'center',
                         margin: 'auto'
                     }}>
-                <Burger ingredients={props.ingredients} />
+                <Burger/>
             </div>
             <Button 
                 BtnType="Danger"
