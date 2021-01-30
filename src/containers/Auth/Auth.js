@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import * as actions from "./../../store/actions/index";
 import Auxilliary from "../../hoc/Auxilliary/Auxilliary";
 import Modal from "./../../components/UI/Modal/Modal";
+import { Redirect } from "react-router-dom";
 
 class Auth extends Component {
     state = {
@@ -43,9 +44,11 @@ class Auth extends Component {
         isSignup: true
     };
 
-    // errorConfirmedHandler = () => {
-    //     this.setState({ showError: false });
-    // };
+    componentDidMount() {
+        if (!this.props.building && this.props.authRedirectPath !== "/") {
+            this.props.setAuthRedirectPath();
+        }
+    }
 
     orderHandler = (event) => {
         event.preventDefault();
@@ -153,6 +156,11 @@ class Auth extends Component {
             <Button BtnType="Success">SUBMIT</Button>
         );
         let err = "ERROR : " + this.props.error + ". PLEASE TRY AGAIN!";
+
+        let authRedirect = null;
+        if (this.props.isAuthenticated) {
+            authRedirect = <Redirect to={this.props.authRedirectPath} />;
+        }
         return (
             <Auxilliary>
                 <Modal
@@ -164,6 +172,7 @@ class Auth extends Component {
                     </span>
                 </Modal>
                 <div className={classes.Auth}>
+                    {authRedirect}
                     <form onSubmit={this.onSubmitHandler}>
                         {form}
                         {submit}
@@ -185,7 +194,10 @@ const MapStateToProps = (state) => {
     return {
         loading: state.auth.loading,
         error: state.auth.error,
-        showError: state.auth.showError
+        showError: state.auth.showError,
+        isAuthenticated: state.auth.token !== null,
+        authRedirectPath: state.auth.authRedirectPath,
+        building: state.bgr.building
     };
 };
 
@@ -193,7 +205,8 @@ const MapDisptachToProps = (dispatch) => {
     return {
         onAuth: (email, password, isSignup) =>
             dispatch(actions.auth(email, password, isSignup)),
-        errorConfirmedHandler: () => dispatch(actions.errorConfirmed())
+        errorConfirmedHandler: () => dispatch(actions.errorConfirmed()),
+        setAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath("/"))
     };
 };
 

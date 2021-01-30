@@ -22,6 +22,18 @@ export const authFail = (error) => {
     };
 };
 
+export const authLogout = () => {
+    return {
+        type: actionTypes.AUTH_LOGOUT
+    };
+};
+
+export const checkoutAuthTimeout = (expirationTime) => {
+    return (dispatch) => {
+        setTimeout(dispatch(authLogout()), expirationTime * 1000);
+    };
+};
+
 export const auth = (email, password, isSignup) => {
     return (dispatch) => {
         dispatch(authStart());
@@ -54,5 +66,12 @@ export const auth = (email, password, isSignup) => {
 export const errorConfirmed = () => {
     return {
         type: actionTypes.ERROR_CONFIRMED
+    };
+};
+
+export const setAuthRedirectPath = (path) => {
+    return {
+        type: actionTypes.SET_AUTH_REDIRECT_PATH,
+        path: path
     };
 };
