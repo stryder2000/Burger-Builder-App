@@ -9,7 +9,7 @@ import classes from "./Orders.css";
 
 class Orders extends Component {
     componentDidMount = () => {
-        this.props.fetchOrderHandler(this.props.token);
+        this.props.fetchOrderHandler(this.props.token, this.props.userId);
     };
     render() {
         let orders = this.props.loading ? (
@@ -32,13 +32,15 @@ class Orders extends Component {
 const MapPropsToState = (state) => {
     return {
         orders: state.odr.orders,
-        token: state.auth.token
+        token: state.auth.token,
+        userId: state.auth.userId
     };
 };
 
 const MapDispatchToState = (dispatch) => {
     return {
-        fetchOrderHandler: (token) => dispatch(actions.fetchOrders(token))
+        fetchOrderHandler: (token, userId) =>
+            dispatch(actions.fetchOrders(token, userId))
     };
 };
 

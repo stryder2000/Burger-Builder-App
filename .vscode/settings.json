@@ -7,6 +7,7 @@
     "[json]": {
       "editor.formatOnSave": true
     },
+    "prettier.singleQuote": true,
     "prettier.trailingComma": "none",
     "prettier.tabWidth": 4,
     "files.trimTrailingWhitespace": true,

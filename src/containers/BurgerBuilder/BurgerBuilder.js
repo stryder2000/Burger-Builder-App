@@ -1,14 +1,14 @@
-import Auxilliary from "../../hoc/Auxilliary/Auxilliary";
-import React, { Component } from "react";
-import Burger from "../../components/Burger/Burger";
-import BuildControls from "../../components/Burger/BuildControls/BuildControls";
-import Modal from "../../components/UI/Modal/Modal";
-import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
-import axios from "../../axios-orders";
-import Spinner from "../../components/UI/Spinner/Spinner";
-import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
-import { connect } from "react-redux";
-import * as actions from "./../../store/actions/index";
+import Auxilliary from '../../hoc/Auxilliary/Auxilliary';
+import React, { Component } from 'react';
+import Burger from '../../components/Burger/Burger';
+import BuildControls from '../../components/Burger/BuildControls/BuildControls';
+import Modal from '../../components/UI/Modal/Modal';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
+import axios from '../../axios-orders';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+import { connect } from 'react-redux';
+import * as actions from './../../store/actions/index';
 class BurgerBuilder extends Component {
     state = {
         purchasing: false
@@ -37,18 +37,18 @@ class BurgerBuilder extends Component {
     //To execute when we press the 'Order Now' button
     purchaseHandler = () => {
         if (this.props.isAuthenticated) {
-            this.props.setAuthRedirectPath("/");
+            this.props.setAuthRedirectPath('/');
             this.setState({ purchasing: true });
         } else {
-            this.props.setAuthRedirectPath("/checkout");
-            this.props.history.push("/auth");
+            this.props.setAuthRedirectPath('/checkout');
+            this.props.history.push('/auth');
         }
     };
 
     // To execute when we press the 'continue' button on the Order Summary modal.
     continuePurchaseHandler = () => {
         this.props.onInitPurchaseHandler();
-        this.props.history.push("/checkout");
+        this.props.history.push('/checkout');
     };
 
     // To execute when we press the 'cancel' button on the Order Summary modal.

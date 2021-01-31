@@ -1,24 +1,24 @@
-import React, { Component } from "react";
-import Input from "./../../components/UI/Input/Input";
-import Button from "./../../components/UI/Button/Button";
-import classes from "./Auth.css";
-import Spinner from "../../components/UI/Spinner/Spinner";
-import { connect } from "react-redux";
-import * as actions from "./../../store/actions/index";
-import Auxilliary from "../../hoc/Auxilliary/Auxilliary";
-import Modal from "./../../components/UI/Modal/Modal";
-import { Redirect } from "react-router-dom";
+import React, { Component } from 'react';
+import Input from './../../components/UI/Input/Input';
+import Button from './../../components/UI/Button/Button';
+import classes from './Auth.css';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import { connect } from 'react-redux';
+import * as actions from './../../store/actions/index';
+import Auxilliary from '../../hoc/Auxilliary/Auxilliary';
+import Modal from './../../components/UI/Modal/Modal';
+import { Redirect } from 'react-router-dom';
 
 class Auth extends Component {
     state = {
         controls: {
             email: {
-                elementType: "input",
+                elementType: 'input',
                 elementConfig: {
-                    type: "email",
-                    placeholder: "Mail Address"
+                    type: 'email',
+                    placeholder: 'Mail Address'
                 },
-                value: "",
+                value: '',
                 validation: {
                     required: true,
                     isEmail: true
@@ -27,12 +27,12 @@ class Auth extends Component {
                 touched: false
             },
             password: {
-                elementType: "input",
+                elementType: 'input',
                 elementConfig: {
-                    type: "password",
-                    placeholder: "Password"
+                    type: 'password',
+                    placeholder: 'Password'
                 },
-                value: "",
+                value: '',
                 validation: {
                     required: true,
                     minLength: 6
@@ -45,7 +45,7 @@ class Auth extends Component {
     };
 
     componentDidMount() {
-        if (!this.props.building && this.props.authRedirectPath !== "/") {
+        if (!this.props.building && this.props.authRedirectPath !== '/') {
             this.props.setAuthRedirectPath();
         }
     }
@@ -89,7 +89,7 @@ class Auth extends Component {
         }
 
         if (rules.required) {
-            isValid = value.trim() !== "" && isValid;
+            isValid = value.trim() !== '' && isValid;
         }
 
         if (rules.minLength) {
@@ -153,9 +153,11 @@ class Auth extends Component {
         let submit = this.props.loading ? (
             <Spinner />
         ) : (
-            <Button BtnType="Success">SUBMIT</Button>
+            <Button BtnType="Success" onClick={this.onSubmitHandler}>
+                SUBMIT
+            </Button>
         );
-        let err = "ERROR : " + this.props.error + ". PLEASE TRY AGAIN!";
+        let err = 'ERROR : ' + this.props.error + '. PLEASE TRY AGAIN!';
 
         let authRedirect = null;
         if (this.props.isAuthenticated) {
@@ -167,7 +169,7 @@ class Auth extends Component {
                     modalClosed={this.props.errorConfirmedHandler}
                     show={this.props.showError}
                 >
-                    <span style={{ color: "red", fontWeight: "600" }}>
+                    <span style={{ color: 'red', fontWeight: '600' }}>
                         {err}
                     </span>
                 </Modal>
@@ -182,7 +184,7 @@ class Auth extends Component {
                         BtnType="Danger"
                         clicked={this.switchAuthModeHandler}
                     >
-                        SWITCH TO {this.state.isSignup ? "LOGIN" : "SIGNUP"}
+                        SWITCH TO {this.state.isSignup ? 'LOGIN' : 'SIGNUP'}
                     </Button>
                 </div>
             </Auxilliary>
@@ -196,8 +198,7 @@ const MapStateToProps = (state) => {
         error: state.auth.error,
         showError: state.auth.showError,
         isAuthenticated: state.auth.token !== null,
-        authRedirectPath: state.auth.authRedirectPath,
-        building: state.bgr.building
+        authRedirectPath: state.auth.authRedirectPath
     };
 };
 
@@ -206,7 +207,7 @@ const MapDisptachToProps = (dispatch) => {
         onAuth: (email, password, isSignup) =>
             dispatch(actions.auth(email, password, isSignup)),
         errorConfirmedHandler: () => dispatch(actions.errorConfirmed()),
-        setAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath("/"))
+        setAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath('/'))
     };
 };
 

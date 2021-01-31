@@ -10,5 +10,6 @@ export {
     auth,
     errorConfirmed,
     authLogout,
-    setAuthRedirectPath
+    setAuthRedirectPath,
+    checkAuthState
 } from "./auth.js";
