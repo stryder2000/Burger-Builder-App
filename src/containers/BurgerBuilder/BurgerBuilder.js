@@ -9,7 +9,7 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import { connect } from 'react-redux';
 import * as actions from './../../store/actions/index';
-class BurgerBuilder extends Component {
+export class BurgerBuilder extends Component {
     state = {
         purchasing: false
     };
@@ -53,7 +53,7 @@ class BurgerBuilder extends Component {
 
     // To execute when we press the 'cancel' button on the Order Summary modal.
     cancelPurchaseHandler = () => {
-        this.props.history.goBack();
+        this.setState({ purchasing: false });
     };
 
     render() {

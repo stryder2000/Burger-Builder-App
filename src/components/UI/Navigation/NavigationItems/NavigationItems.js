@@ -1,6 +1,7 @@
-import React from "react";
-import classes from "./NavigationItems.css";
-import NavigationItem from "./NavigationItem/NavigationItem";
+import React from 'react';
+import classes from './NavigationItems.css';
+import NavigationItem from './NavigationItem/NavigationItem';
+import Auxilliary from './../../../../hoc/Auxilliary/Auxilliary';
 
 const navigationItems = (props) => (
     <ul className={classes.NavigationItems}>
@@ -9,14 +10,14 @@ const navigationItems = (props) => (
         </NavigationItem>
 
         {props.isAuthenticated ? (
-            <React.Fragment>
+            <Auxilliary>
                 <NavigationItem link="/orders" clicked={props.clicked}>
                     My Orders
                 </NavigationItem>
                 <NavigationItem link="/logout" clicked={props.clicked}>
                     Logout
                 </NavigationItem>
-            </React.Fragment>
+            </Auxilliary>
         ) : (
             <NavigationItem link="/auth" clicked={props.clicked}>
                 Authenticate
