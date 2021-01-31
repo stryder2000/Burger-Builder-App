@@ -1,5 +1,5 @@
-import * as actionTypes from "./../actions/actionTypes";
-import { updateObject } from "./../utility";
+import * as actionTypes from './../actions/actionTypes';
+import { updateObject } from './../../shared/utility';
 
 const initialState = {
     token: null,
@@ -7,7 +7,7 @@ const initialState = {
     loading: null,
     error: null,
     showError: false,
-    authRedirectPath: "/"
+    authRedirectPath: '/'
 };
 
 const reducer = (state = initialState, action) => {

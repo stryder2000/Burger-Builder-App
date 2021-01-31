@@ -8,6 +8,7 @@ import * as actions from './../../store/actions/index';
 import Auxilliary from '../../hoc/Auxilliary/Auxilliary';
 import Modal from './../../components/UI/Modal/Modal';
 import { Redirect } from 'react-router-dom';
+import { checkValidity } from './../../shared/utility';
 
 class Auth extends Component {
     state = {
@@ -73,44 +74,13 @@ class Auth extends Component {
                 ...this.state.controls[controlName],
                 value: event.target.value,
                 touched: true,
-                valid: this.checkValidity(
+                valid: checkValidity(
                     event.target.value,
                     this.state.controls[controlName].validation
                 )
             }
         };
         this.setState({ controls: updatedControls });
-    };
-
-    checkValidity = (value, rules) => {
-        let isValid = true;
-        if (!rules) {
-            return true;
-        }
-
-        if (rules.required) {
-            isValid = value.trim() !== '' && isValid;
-        }
-
-        if (rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid;
-        }
-
-        if (rules.maxLength) {
-            isValid = value.length <= rules.maxLength && isValid;
-        }
-
-        if (rules.isEmail) {
-            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-            isValid = pattern.test(value) && isValid;
-        }
-
-        if (rules.isNumeric) {
-            const pattern = /^\d+$/;
-            isValid = pattern.test(value) && isValid;
-        }
-
-        return isValid;
     };
 
     onSubmitHandler = (event) => {
@@ -153,10 +123,9 @@ class Auth extends Component {
         let submit = this.props.loading ? (
             <Spinner />
         ) : (
-            <Button BtnType="Success" onClick={this.onSubmitHandler}>
-                SUBMIT
-            </Button>
+            <Button BtnType="Success">SUBMIT</Button>
         );
+
         let err = 'ERROR : ' + this.props.error + '. PLEASE TRY AGAIN!';
 
         let authRedirect = null;
@@ -198,7 +167,8 @@ const MapStateToProps = (state) => {
         error: state.auth.error,
         showError: state.auth.showError,
         isAuthenticated: state.auth.token !== null,
-        authRedirectPath: state.auth.authRedirectPath
+        authRedirectPath: state.auth.authRedirectPath,
+        building: state.bgr.building
     };
 };
 
