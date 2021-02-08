@@ -1,18 +1,20 @@
 import React from 'react';
 import classes from './Order.css';
+import Button from './../UI/Button/Button';
 
 const order = (props) => {
     const ingredients = [];
-    
-    for(let ingredientName in props.ingredients){
+
+    for (let ingredientName in props.ingredients) {
         ingredients.push({
             name: ingredientName,
             amount: props.ingredients[ingredientName]
         });
     }
 
-    const ingredientsOutput = ingredients.map(ig =>{
-        return <span 
+    const ingredientsOutput = ingredients.map((ig) => {
+        return (
+            <span
                 key={ig.name}
                 style={{
                     textTransform: 'capitalize',
@@ -20,15 +22,33 @@ const order = (props) => {
                     margin: '0 5px',
                     border: '1px solid #ccc',
                     padding: '5px'
-                }} >{ig.name} ({ig.amount}) </span>
-    })
+                }}
+            >
+                {ig.name} ({ig.amount}){' '}
+            </span>
+        );
+    });
 
-    return(
+    return (
         <div className={classes.Order}>
             <p>Ingredients: {ingredientsOutput}</p>
-            <p>Price: <strong>USD {props.price}</strong></p>
+            <p>
+                Price: <strong>USD {props.price}</strong>
+            </p>
+            <Button
+                BtnType="Danger"
+                clicked={() =>
+                    props.deleteOrderHandler(
+                        props.token,
+                        props.orderId,
+                        props.userId
+                    )
+                }
+            >
+                Delete
+            </Button>
         </div>
     );
-}
+};
 
 export default order;

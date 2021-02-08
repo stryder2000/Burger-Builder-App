@@ -25,7 +25,6 @@ const purchaseBurgerStart = () => {
 export const purchaseBurger = (order, token) => {
     return (dispatch) => {
         dispatch(purchaseBurgerStart());
-
         axios
             .post('/orders.json?auth=' + token, order)
             .then((response) => {
@@ -88,6 +87,55 @@ export const fetchOrders = (token, userId) => {
             })
             .catch((err) => {
                 dispatch(fetchOrderFail(err));
+            });
+    };
+};
+
+export const deleteOrderStart = () => {
+    return {
+        type: actionTypes.DELETE_ORDER_START
+    };
+};
+
+export const deleteOrderFail = (err) => {
+    return {
+        type: actionTypes.DELETE_ORDER_FAIL,
+        error: err
+    };
+};
+
+export const deleteOrderSuccess = (orderId) => {
+    return {
+        type: actionTypes.DELETE_ORDER_SUCCESS,
+        orderId: orderId
+    };
+};
+
+export const deleteOrderHandler = (token, orderId, userId) => {
+    return (dispatch) => {
+        dispatch(deleteOrderStart());
+        const queryParams = orderId + '.json?auth=' + token;
+        axios
+            .delete('/orders/' + queryParams)
+            .then((response) => {
+                dispatch(deleteOrderSuccess(orderId));
+            })
+            .catch((err) => {
+                dispatch(deleteOrderFail(err));
+            });
+    };
+};
+
+export const deleteAllOrdersHandler = (token, userId) => {
+    return (dispatch) => {
+        dispatch(deleteOrderStart());
+        axios
+            .delete('/orders.json?auth=' + token)
+            .then((response) => {
+                dispatch(deleteOrderSuccess());
+            })
+            .catch((err) => {
+                dispatch(deleteOrderFail(err));
             });
     };
 };

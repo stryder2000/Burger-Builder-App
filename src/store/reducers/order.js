@@ -27,7 +27,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.PURCHASE_BURGER_FAIL:
             return updateObject(state, { loading: false });
         case actionTypes.FETCH_ORDER_START:
-            return updateObject(state, { loading: true });
+            return updateObject(state, { loading: true, error: false });
         case actionTypes.FETCH_ORDER_SUCCESS:
             return updateObject(state, {
                 orders: action.orders,
@@ -37,6 +37,37 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 error: true,
                 loading: false
+            });
+        case actionTypes.DELETE_ORDER_START:
+            return updateObject(state, {
+                loading: true,
+                error: false
+            });
+        case actionTypes.DELETE_ORDER_SUCCESS:
+            if (action.orderId == null) {
+                return updateObject(state, {
+                    loading: false,
+                    error: false,
+                    orders: []
+                });
+            } else {
+                let updatedOrders = [];
+                for (let key in state.orders) {
+                    if (state.orders[key].id !== action.orderId) {
+                        updatedOrders.push(state.orders[key]);
+                    }
+                }
+                return updateObject(state, {
+                    loading: false,
+                    error: false,
+                    orders: updatedOrders
+                });
+            }
+
+        case actionTypes.DELETE_ORDER_FAIL:
+            return updateObject(state, {
+                loading: false,
+                error: true
             });
         default:
             return state;
