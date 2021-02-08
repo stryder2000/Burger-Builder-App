@@ -32,21 +32,20 @@ const order = (props) => {
     return (
         <div className={classes.Order}>
             <p>Ingredients: {ingredientsOutput}</p>
+
             <p>
-                Price: <strong>USD {props.price}</strong>
+                Price: <strong> &#8377; {props.price}</strong>
             </p>
-            <Button
-                BtnType="Danger"
-                clicked={() =>
-                    props.deleteOrderHandler(
-                        props.token,
-                        props.orderId,
-                        props.userId
-                    )
-                }
-            >
-                Delete
-            </Button>
+            <div style={{ marginLeft: '85%' }}>
+                <Button
+                    BtnType="Danger"
+                    clicked={() =>
+                        props.deleteOrderHandler(props.token, props.orderId)
+                    }
+                >
+                    Delete
+                </Button>
+            </div>
         </div>
     );
 };

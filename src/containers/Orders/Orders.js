@@ -33,7 +33,6 @@ class Orders extends Component {
                         <Order
                             key={order.id}
                             orderId={order.id}
-                            userId={order.userId}
                             ingredients={order.ingredients}
                             price={order.price}
                             deleteOrderHandler={this.props.deleteOrder}
@@ -66,10 +65,10 @@ const MapDispatchToState = (dispatch) => {
     return {
         fetchOrderHandler: (token, userId) =>
             dispatch(actions.fetchOrders(token, userId)),
-        deleteAllOrders: (token) =>
-            dispatch(actions.deleteAllOrdersHandler(token)),
-        deleteOrder: (token, orderId, userId) =>
-            dispatch(actions.deleteOrderHandler(token, orderId, userId))
+        deleteAllOrders: (token, userId) =>
+            dispatch(actions.deleteAllOrdersHandler(token, userId)),
+        deleteOrder: (token, orderId) =>
+            dispatch(actions.deleteOrderHandler(token, orderId))
     };
 };
 
