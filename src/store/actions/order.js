@@ -72,7 +72,8 @@ export const fetchOrders = (token, userId) => {
     return (dispatch) => {
         dispatch(fetchOrderStart());
         const queryParams =
-            'auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
+            // 'auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
+            `auth=${token}&orderBy="userId"&equalTo="${userId}"`;
         axios
             .get('/orders.json?' + queryParams)
             .then((res) => {
@@ -129,13 +130,24 @@ export const deleteOrderHandler = (token, orderId, userId) => {
 export const deleteAllOrdersHandler = (token, userId) => {
     return (dispatch) => {
         dispatch(deleteOrderStart());
+        const query = `auth=${token}&orderBy="userId"&equalTo="${userId}"`;
         axios
-            .delete('/orders.json?auth=' + token)
-            .then((response) => {
-                dispatch(deleteOrderSuccess());
+            .get('/orders.json?' + query)
+            .then((res) => {
+                for (let key in res.data) {
+                    const queryParams = `${key}.json?auth=${token}`;
+                    axios
+                        .delete('/orders/' + queryParams)
+                        .then((response) => {
+                            dispatch(deleteOrderSuccess(key));
+                        })
+                        .catch((err) => {
+                            dispatch(deleteOrderFail(err));
+                        });
+                }
             })
             .catch((err) => {
-                dispatch(deleteOrderFail(err));
+                dispatch(fetchOrderFail(err));
             });
     };
 };
