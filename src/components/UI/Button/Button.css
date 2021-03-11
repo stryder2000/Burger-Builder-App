@@ -1,6 +1,7 @@
 .Button {
     background-color: transparent;
-    border: none;
+    border: 1px solid #5c9210;
+    border-radius: 5px;
     color: white;
     outline: none;
     cursor: pointer;
@@ -12,18 +13,21 @@
 
 .Button:first-of-type {
     margin-left: 0;
-    padding-left: 0;
 }
 
-.Button:disabled{
+.Button:disabled {
     color: #ccc;
     cursor: not-allowed;
 }
 
 .Success {
-    color: #5C9210;
+    color: #5c9210;
+    border: 1px solid #5c9210;
+    background-color: rgb(209, 245, 209);
 }
 
 .Danger {
     color: #944317;
+    border: 1px solid #944317;
+    background-color: rgb(235, 177, 158);
 }

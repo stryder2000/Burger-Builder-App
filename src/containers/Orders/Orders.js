@@ -17,17 +17,19 @@ class Orders extends Component {
             <Spinner />
         ) : this.props.orders && this.props.orders.length !== 0 ? (
             <div className={classes.Orders}>
-                <Button
-                    BtnType="Danger"
-                    clicked={() =>
-                        this.props.deleteAllOrders(
-                            this.props.token,
-                            this.props.userId
-                        )
-                    }
-                >
-                    DELETE ALL PREVIOUS ORDERS
-                </Button>
+                <center>
+                    <Button
+                        BtnType="Danger"
+                        clicked={() =>
+                            this.props.deleteAllOrders(
+                                this.props.token,
+                                this.props.userId
+                            )
+                        }
+                    >
+                        DELETE ALL PREVIOUS ORDERS
+                    </Button>
+                </center>
                 {this.props.orders.map((order) => {
                     return (
                         <Order
